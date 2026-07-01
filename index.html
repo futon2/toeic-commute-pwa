@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1f6f5b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="TOEIC通勤">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>TOEIC通勤学習</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <p class="eyebrow">TOEIC通勤</p>
+        <div class="today-count" aria-label="今日の学習数">
+          <span id="todayCount">0</span>
+          <small>今日</small>
+        </div>
+      </header>
+
+      <nav class="tabs" aria-label="学習メニュー">
+        <button class="tab active" data-mode="grammar" type="button">文法</button>
+        <button class="tab" data-mode="vocabulary" type="button">単語</button>
+        <button class="tab" data-mode="idiom" type="button">イディオム</button>
+        <button class="tab" data-mode="synonym" type="button">類義語</button>
+      </nav>
+
+      <section class="toolbar">
+        <button id="newSession" class="secondary-button" type="button">新しい10問</button>
+        <span id="progressLabel" class="progress-label">1 / 10</span>
+      </section>
+
+      <article class="question-panel" id="questionPanel">
+        <div class="question-meta">
+          <span id="partLabel">文法</span>
+          <button id="speakButton" class="speak-button" type="button" aria-label="発音を聞く">発音</button>
+        </div>
+        <p id="questionText" class="question-text"></p>
+        <div id="answers" class="answers"></div>
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+        <div class="panel-actions">
+          <button id="nextQuestion" class="primary-button" type="button">次へ</button>
+        </div>
+      </article>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

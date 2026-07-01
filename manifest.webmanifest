@@ -1,0 +1,17 @@
+{
+  "name": "TOEIC通勤学習",
+  "short_name": "TOEIC通勤",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7faf8",
+  "theme_color": "#1f6f5b",
+  "description": "通勤時間にTOEICの文法問題と単語を短時間で復習するPWAです。",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
