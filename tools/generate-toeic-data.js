@@ -48,6 +48,303 @@ function articleFor(term) {
   return /^[aeiou]/i.test(term) ? "an" : "a";
 }
 
+function buildVocabularyExamples(term, pos, root = term) {
+  if (pos === "adverb") return buildAdverbExamples(term);
+  if (pos === "verb") return buildVerbExamples(term, root);
+  if (pos === "adjective") return buildAdjectiveExamples(term);
+  return buildNounExamples(term);
+}
+
+function buildAdjectiveExamples(term) {
+  const specific = {
+    financial: [
+      "The finance team reviewed the financial report before the client meeting.",
+      "The company released its financial statement after the audit.",
+      "Managers discussed the financial plan for the next quarter."
+    ],
+    annual: [
+      "The annual report will be distributed to shareholders next week.",
+      "Employees must complete the annual survey by Friday.",
+      "The annual conference attracts clients from several regions."
+    ],
+    quarterly: [
+      "The quarterly sales report was sent to the regional office.",
+      "The team reviews quarterly targets during the planning meeting.",
+      "Quarterly results will be announced after the finance review."
+    ],
+    monthly: [
+      "The monthly invoice was attached to the confirmation email.",
+      "The supervisor checks monthly attendance records.",
+      "Monthly maintenance is scheduled for the first Friday."
+    ],
+    weekly: [
+      "The weekly schedule was posted on the employee portal.",
+      "The manager leads a weekly meeting every Monday.",
+      "Weekly inventory checks help prevent supply shortages."
+    ],
+    mandatory: [
+      "All employees must complete the mandatory training by Friday.",
+      "The notice explains mandatory safety procedures.",
+      "Attendance is mandatory for the new staff orientation."
+    ],
+    optional: [
+      "The optional workshop is open to all new employees.",
+      "Customers may purchase an optional warranty for the device.",
+      "The registration form includes an optional survey question."
+    ],
+    accurate: [
+      "Please enter accurate figures in the expense report.",
+      "The accountant checked that the invoice total was accurate.",
+      "Accurate delivery dates help customers plan ahead."
+    ],
+    detailed: [
+      "The client requested a detailed estimate for the renovation.",
+      "A detailed agenda was sent before the meeting.",
+      "The manual provides detailed instructions for installation."
+    ],
+    revised: [
+      "The revised schedule was sent to all participants.",
+      "Please review the revised contract before signing it.",
+      "A revised invoice will be issued this afternoon."
+    ],
+    final: [
+      "The final report must be submitted by noon.",
+      "The team approved the final design after the review.",
+      "Final payment is due within thirty days."
+    ],
+    confidential: [
+      "The confidential document should not be shared externally.",
+      "Employees signed a confidential agreement before the project.",
+      "Confidential customer data is stored on a secure server."
+    ],
+    available: [
+      "The updated brochure is available on the company website.",
+      "A meeting room is available after 3 p.m.",
+      "Replacement parts are available at the service desk."
+    ]
+  };
+  if (specific[term]) return specific[term];
+
+  const article = articleFor(term);
+  return [
+    `The team reviewed the ${term} document before the client meeting.`,
+    `Employees received ${article} ${term} update about the schedule change.`,
+    `The client requested ${article} ${term} option before approving the order.`
+  ];
+}
+
+function buildAdverbExamples(term) {
+  const frequencyAdverbs = new Set(["annually", "quarterly", "monthly", "weekly", "regularly", "periodically"]);
+  if (frequencyAdverbs.has(term)) {
+    return [
+      `The sales report is updated ${term}.`,
+      `Inventory levels are reviewed ${term} by the warehouse team.`,
+      `The branch submits expense figures ${term}.`
+    ];
+  }
+
+  const directionalAdverbs = new Set(["internally", "externally", "regionally", "locally", "internationally"]);
+  if (directionalAdverbs.has(term)) {
+    return [
+      `The announcement was shared ${term} before the public release.`,
+      `The service is available ${term} through selected branches.`,
+      `Customer feedback is reviewed ${term} by the support team.`
+    ];
+  }
+
+  if (term === "financially") {
+    return [
+      "The project is financially viable after the revised budget.",
+      "The branch is financially responsible for the renovation costs.",
+      "Management reviewed whether the proposal was financially practical."
+    ];
+  }
+
+  if (term === "technically") {
+    return [
+      "The device is technically ready for installation.",
+      "A technician explained the issue technically but clearly.",
+      "The system is technically compatible with the new software."
+    ];
+  }
+
+  if (term === "officially") {
+    return [
+      "The policy was officially announced on Monday.",
+      "The new branch officially opens next month.",
+      "Employees were officially notified of the schedule change."
+    ];
+  }
+
+  return [
+    `The figures were checked ${term} before the report was submitted.`,
+    `The assistant responded ${term} to the client's request.`,
+    `The update was completed ${term} and shared with the team.`
+  ];
+}
+
+function buildVerbExamples(term, root) {
+  if (root === "supply") {
+    if (term.endsWith("ing")) {
+      return [
+        `The vendor is ${term} replacement parts for the repair.`,
+        `The warehouse is ${term} office materials this afternoon.`,
+        `The company is ${term} equipment to the new branch.`
+      ];
+    }
+    if (term.endsWith("ed")) {
+      return [
+        `The vendor ${term} replacement parts for the repair.`,
+        `The warehouse ${term} office materials this afternoon.`,
+        `The company ${term} equipment to the new branch.`
+      ];
+    }
+    if (term.endsWith("s")) {
+      return [
+        `The vendor ${term} replacement parts for the repair.`,
+        `The warehouse ${term} office materials every Monday.`,
+        `The company ${term} equipment to regional branches.`
+      ];
+    }
+    return [
+      `The vendor will ${term} replacement parts for the repair.`,
+      `The warehouse can ${term} office materials by Friday.`,
+      `The company plans to ${term} equipment to the new branch.`
+    ];
+  }
+
+  const intransitiveRoots = new Set(["apologize", "complain", "participate"]);
+  const isIntransitive = intransitiveRoots.has(root);
+
+  if (term.endsWith("ing")) {
+    return isIntransitive
+      ? [
+          `Employees are ${term} in the training session this week.`,
+          `The team is ${term} in a customer service workshop.`,
+          `Managers discussed who is ${term} in the upcoming event.`
+        ]
+      : [
+          `The team is ${term} the request before the deadline.`,
+          `The supervisor is ${term} the updated schedule.`,
+          `The department is ${term} the documents for the client.`
+        ];
+  }
+
+  if (term.endsWith("ed")) {
+    return isIntransitive
+      ? [
+          `The employee ${term} during the follow-up meeting.`,
+          `Several customers ${term} after the service delay.`,
+          `The representative ${term} before offering a solution.`
+        ]
+      : [
+          `The manager ${term} the request after reviewing the budget.`,
+          `The team ${term} the document before sending it to the client.`,
+          `The supervisor ${term} the schedule during the meeting.`
+        ];
+  }
+
+  if (term.endsWith("s")) {
+    return isIntransitive
+      ? [
+          `The employee ${term} in the weekly training session.`,
+          `The representative ${term} during the client meeting.`,
+          `The manager ${term} before explaining the solution.`
+        ]
+      : [
+          `The system ${term} the request automatically.`,
+          `The supervisor ${term} the schedule every Friday.`,
+          `The department ${term} the documents before approval.`
+        ];
+  }
+
+  return isIntransitive
+    ? [
+        `Employees should ${term} in the required training session.`,
+        `The representative will ${term} during the client meeting.`,
+        `Managers may ${term} before offering a solution.`
+      ]
+    : [
+        `The team will ${term} the request before the deadline.`,
+        `Please ${term} the document before sending it to the client.`,
+        `The manager asked staff to ${term} the updated schedule.`
+      ];
+}
+
+function buildNounExamples(term) {
+  const specific = {
+    report: [
+      "The report summarizes sales results for the quarter.",
+      "Please submit the report to your supervisor by Friday.",
+      "A copy of the report was attached to the email."
+    ],
+    budget: [
+      "The budget was approved after the finance meeting.",
+      "Please update the budget before ordering new equipment.",
+      "The department reduced its travel budget this year."
+    ],
+    invoice: [
+      "The invoice was attached to the confirmation email.",
+      "Please pay the invoice within thirty days.",
+      "The accountant corrected the invoice number."
+    ],
+    payment: [
+      "Payment is due at the end of the month.",
+      "The customer confirmed payment by bank transfer.",
+      "A late payment fee may be added to the invoice."
+    ],
+    estimate: [
+      "The contractor sent an estimate for the repairs.",
+      "Please review the estimate before approving the work.",
+      "The estimate includes labor and delivery costs."
+    ],
+    statement: [
+      "The monthly statement was sent to the account holder.",
+      "Please check the statement for billing errors.",
+      "The bank statement confirms the recent payment."
+    ],
+    compliance: [
+      "The company reviews compliance policies every year.",
+      "Employees must complete compliance training by Friday.",
+      "The audit found no compliance issues."
+    ],
+    procurement: [
+      "Procurement will contact the supplier for a new quote.",
+      "The procurement process was updated last month.",
+      "All large purchases must go through procurement."
+    ],
+    specification: [
+      "The specification lists the required product dimensions.",
+      "Please review the specification before production begins.",
+      "The supplier changed one specification in the contract."
+    ],
+    warranty: [
+      "The warranty covers repairs for one year.",
+      "Customers can extend the warranty at the time of purchase.",
+      "Please keep the receipt with the warranty documents."
+    ],
+    subscription: [
+      "The subscription renews automatically each month.",
+      "Please cancel the subscription before the renewal date.",
+      "The company purchased a software subscription for the team."
+    ],
+    turnover: [
+      "Employee turnover decreased after the training program.",
+      "The report compares annual turnover across departments.",
+      "High turnover can increase hiring costs."
+    ]
+  };
+  if (specific[term]) return specific[term];
+
+  const plural = term.endsWith("s") && !term.endsWith("ss");
+  const be = plural ? "were" : "was";
+  return [
+    `The ${term} ${be} discussed during the weekly meeting.`,
+    `Please include the ${term} in the updated file.`,
+    `The department sent the ${term} with the confirmation email.`
+  ];
+}
+
 function makeVocabulary() {
   const entries = [];
   const seen = new Set();
@@ -68,6 +365,7 @@ function makeVocabulary() {
 
 function addVocabularyEntry(entries, seen, term, meaning, similar, note, root = term) {
   if (entries.length >= 1500 || seen.has(term) || term.includes(" ")) return;
+  const pos = inferPos(term);
   seen.add(term);
   entries.push({
     id: "",
@@ -75,21 +373,20 @@ function addVocabularyEntry(entries, seen, term, meaning, similar, note, root = 
     root,
     meaning,
     similar,
-    pos: inferPos(term),
+    pos,
     note: note || `${term} はTOEICの業務・連絡・手続きの文脈で役立つ単語です。`,
-    examples: [
-      `The manager used "${term}" in the report.`,
-      `Please check the meaning of "${term}" before the meeting.`,
-      `You may see "${term}" in business e-mails and notices.`
-    ]
+    examples: buildVocabularyExamples(term, pos, root)
   });
 }
 
 function inferPos(term) {
-  if (term.endsWith("ly")) return "adverb";
-  if (term.endsWith("ing") || term.endsWith("ed")) return "verb";
-  const adjectiveHints = new Set(["financial", "quarterly", "annual", "revised", "detailed", "accurate", "final", "preliminary", "projected", "approved", "estimated", "outstanding", "overdue", "monthly", "budgetary", "upcoming", "scheduled", "postponed", "mandatory", "optional", "online", "regional", "internal", "external", "qualified", "experienced", "prospective", "successful", "eligible", "new", "current", "former", "temporary", "permanent", "efficient", "routine", "regular", "urgent", "necessary", "additional", "technical", "confidential", "official", "required", "missing", "original", "duplicate", "electronic", "printed", "popular", "innovative", "improved", "defective", "replacement", "complimentary", "promotional", "seasonal", "competitive", "affordable", "available", "limited", "customized", "discontinued"]);
+  const adjectiveHints = new Set(["financial", "quarterly", "annual", "revised", "detailed", "accurate", "final", "preliminary", "projected", "approved", "estimated", "outstanding", "overdue", "monthly", "budgetary", "upcoming", "scheduled", "postponed", "mandatory", "optional", "online", "regional", "internal", "external", "qualified", "experienced", "prospective", "successful", "eligible", "new", "current", "former", "temporary", "permanent", "efficient", "routine", "regular", "urgent", "necessary", "additional", "technical", "confidential", "official", "required", "missing", "original", "duplicate", "electronic", "printed", "popular", "innovative", "improved", "defective", "replacement", "complimentary", "promotional", "seasonal", "competitive", "affordable", "available", "limited", "customized", "discontinued", "friendly"]);
+  const verbHints = new Set(["apply", "reply", "supply", "reapply", "rereply", "resupply"]);
   if (adjectiveHints.has(term)) return "adjective";
+  if (verbHints.has(term)) return "verb";
+  if (term.endsWith("ly")) return "adverb";
+  if (term.endsWith("able")) return "adjective";
+  if (term.endsWith("ing") || term.endsWith("ed")) return "verb";
   return "noun";
 }
 
@@ -145,9 +442,23 @@ function buildSingleWordSources() {
   ];
   verbs.forEach(([term, meaning, similar]) => add(term, meaning, similar, `${term} はTOEICの職場・取引の動作を表す重要語です。`, "verb"));
 
+  addExtraToeicWords(add);
   addSingleWordSupplements(add);
 
   return sources;
+}
+
+function addExtraToeicWords(add) {
+  [
+    ["compliance", "コンプライアンス", "adherence"],
+    ["procurement", "調達", "purchasing"],
+    ["specification", "仕様", "requirement"],
+    ["warranty", "保証", "guarantee"],
+    ["subscription", "定期購読", "membership"],
+    ["turnover", "離職率", "attrition"]
+  ].forEach(([term, meaning, similar]) => {
+    add(term, meaning, similar, `${term} はTOEICの職場・契約・手続き文脈で役立つ単語です。`, "noun");
+  });
 }
 
 function addSingleWordSupplements(add) {
@@ -219,9 +530,15 @@ function canUseRePrefix(term) {
 
 function canMakeAdverb(term) {
   if (term.includes("-") || term.endsWith("ed") || term.endsWith("ing") || term.endsWith("ly")) return false;
-  if (term.endsWith("y")) return false;
-  if (["available", "eligible", "suitable", "daily", "weekly", "monthly", "annual", "quarterly", "overdue", "final"].includes(term)) return false;
-  return true;
+  const naturalAdverbs = new Set([
+    "financial", "annual", "accurate", "optional", "regional", "internal", "external", "prospective",
+    "successful", "current", "former", "permanent", "efficient", "routine", "regular", "urgent",
+    "necessary", "additional", "technical", "confidential", "official", "brief", "popular",
+    "innovative", "seasonal", "competitive", "convenient", "private", "public", "central",
+    "temporary", "local", "loyal", "individual", "important", "spacious", "direct", "proper",
+    "prompt", "separate", "secure"
+  ]);
+  return naturalAdverbs.has(term);
 }
 
 function getSimilar(term, type) {

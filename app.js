@@ -49,7 +49,7 @@ function normalizeGrammar(items) {
 
 function normalizeChoiceData(items, type) {
   return items.map((item, index) => {
-    const choices = buildChoices(item, items);
+    const choices = buildChoices(item, items, index);
     return {
       id: item.id || `${type}-${String(index + 1).padStart(4, "0")}`,
       label: type === "vocabulary" ? "単語" : "イディオム",
@@ -80,11 +80,36 @@ function normalizeSynonymData(items) {
   }));
 }
 
-function buildChoices(item, items) {
-  const distractors = shuffle(items.filter((entry) => entry.meaning !== item.meaning))
-    .slice(0, 3)
-    .map((entry) => entry.meaning);
-  return shuffle([item.meaning, ...distractors]);
+function buildChoices(item, items, itemIndex) {
+  const root = item.root || item.base || item.term;
+  const distractors = [];
+  const pools = [
+    item.base ? shuffle(items.filter((entry) => entry.base === item.base)) : [],
+    item.pos ? nearbyItems(items, itemIndex).filter((entry) => entry.pos === item.pos) : [],
+    item.pos ? shuffle(items.filter((entry) => entry.pos === item.pos)) : [],
+    nearbyItems(items, itemIndex),
+    shuffle(items)
+  ];
+
+  pools.forEach((pool) => {
+    pool.forEach((entry) => {
+      if (distractors.length >= 3) return;
+      const entryRoot = entry.root || entry.base || entry.term;
+      if (entry.meaning === item.meaning) return;
+      if (!item.base && entryRoot === root) return;
+      if (distractors.includes(entry.meaning)) return;
+      distractors.push(entry.meaning);
+    });
+  });
+
+  return shuffle([item.meaning, ...distractors.slice(0, 3)]);
+}
+
+function nearbyItems(items, itemIndex) {
+  return items
+    .map((entry, index) => ({ entry, distance: Math.abs(index - itemIndex) }))
+    .sort((a, b) => a.distance - b.distance)
+    .map((item) => item.entry);
 }
 
 function shuffle(items) {

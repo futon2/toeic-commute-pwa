@@ -1,4 +1,4 @@
-const cacheName = "toeic-commute-pwa-v10";
+const cacheName = "toeic-commute-pwa-v11";
 const filesToCache = [
   "./",
   "./index.html",
